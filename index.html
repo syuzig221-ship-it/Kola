@@ -163,7 +163,7 @@
     
     function loadAndPlayVideo(videoPath) {
         if (!videoPath || videoPath === "") {
-           videoElem.innerHTML = `<source src="${videoPath}" type="video/mp4">`;;
+           videoElem.innerHTML = <source src="" type="video/mp4">;;;
             videoElem.load();
             alert("🎥 ՎԻԴԵՈՅԻ ՀՂՈՒՄԸ ԴԱՏԱՐԿ Է։\nԽնդրում եմ վերևի VIDEO_URLS-ում տեղադրեք ճիշտ հղումները (mp4):");
             return;
