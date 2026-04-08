@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Հարց ընկերոջս համար 💖</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(145deg, #f8acc6 0%, #ffdde1 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Poppins', 'Arial', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .question-card {
+            background: rgba(255, 250, 240, 0.96);
+            backdrop-filter: blur(2px);
+            border-radius: 64px 48px 64px 48px;
+            box-shadow: 0 30px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255,255,200,0.5);
+            padding: 2rem 2rem 2.5rem;
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            transition: 0.2s;
+        }
+        h1 {
+            font-size: 2.8rem;
+            color: #b13e6b;
+            margin: 0 0 1rem 0;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-shadow: 3px 3px 0 #ffd9e6;
+        }
+        .question-text {
+            font-size: 2rem;
+            font-weight: bold;
+            background: #fff0f5;
+            display: inline-block;
+            padding: 0.5rem 2rem;
+            border-radius: 100px;
+            margin-bottom: 2.2rem;
+            color: #a12a55;
+            box-shadow: inset 0 -2px 0 #fbc4d2, 0 8px 15px rgba(0,0,0,0.05);
+        }
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0 15px;
+        }
+        .answer-btn {
+            border: none;
+            background: #ffe2eb;
+            padding: 16px 28px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.2s ease;
+            font-family: inherit;
+            color: #831d47;
+            box-shadow: 0 5px 0 #b38297;
+            flex: 0 1 auto;
+            min-width: 140px;
+        }
+        .answer-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #b38297;
+        }
+        .btn-yes { background: #c7f0c2; color: #1f6d2b; box-shadow: 0 5px 0 #8fbb88; }
+        .btn-no { background: #ffc9c9; color: #a1221a; box-shadow: 0 5px 0 #c2827a; }
+        .btn-crazy { background: #ffe3a3; color: #aa6f20; box-shadow: 0 5px 0 #daae6e; }
+
+        .video-container {
+            margin-top: 35px;
+            border-radius: 48px;
+            overflow: hidden;
+            background: #00000022;
+            padding: 6px;
+            transition: all 0.3s;
+        }
+        video {
+            width: 100%;
+            max-height: 380px;
+            border-radius: 42px;
+            display: block;
+            object-fit: cover;
+            background: #110000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .reset-area {
+            margin-top: 20px;
+        }
+        .reset-btn {
+            background: #f0d3dc;
+            border: none;
+            padding: 10px 26px;
+            font-size: 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            color: #7b3550;
+            font-weight: bold;
+            transition: 0.1s;
+        }
+        .reset-btn:active {
+            transform: scale(0.96);
+        }
+        footer {
+            margin-top: 15px;
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        @media (max-width: 550px) {
+            .question-card { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+          .question-text { font-size: 1.5rem; }
+            .answer-btn { font-size: 1.3rem; padding: 12px 18px; min-width: 110px; }
+        }
+    </style>
+</head>
+<body>
+<div class="question-card" id="app">
+    <h1>💌 Հարց սիրելիիս 💌</h1>
+    <div class="question-text">✨ սիրում ես ինձ? ✨</div>
+    <div class="buttons">
+        <button class="answer-btn btn-yes" data-answer="yes">💚 Հա 💚</button>
+        <button class="answer-btn btn-no" data-answer="no">🖤 Չէ 🖤</button>
+        <button class="answer-btn btn-crazy" data-answer="crazy">🤪 Գժվում եմ քո համար 🤪</button>
+    </div>
+    <div class="video-container" id="videoPlayer">
+        <video id="reactionVideo" controls controlslist="nodownload" style="width:100%;" preload="auto">
+            <source src="" type="video/mp4">
+            Your browser does not support video.
+        </video>
+    </div>
+    <div class="reset-area">
+        <button class="reset-btn" id="resetBtn">⟳ Նոր հարց / մեկ այլ պատասխան</button>
+    </div>
+    <footer>❤️ սեղմիր պատասխաններից մեկը, կտեսնես քեզ համար պատրաստած վիդեոն</footer>
+</div>
+
+<script>
+    // =====================================================
+    // ⚠️ ԱՅՍ ՏԵՂՈՒՄ ՏԵՂԱԴՐԵՔ ՁԵՐ ՎԻԴԵՈՆԵՐԻ ԱՆՈՒՆՆԵՐԸ ⚠️
+    // =====================================================
+    
+    const VIDEO_URLS = {
+        yes: "videos/hai_vd.mp4",
+        no: "videos/che_vd.mp4",
+        crazy: "videos/chgitem_vd.mp4"
+    };
+    
+    const videoElem = document.getElementById('reactionVideo');
+    const resetBtn = document.getElementById('resetBtn');
+    const answerBtns = document.querySelectorAll('.answer-btn');
+    
+    function loadAndPlayVideo(videoPath) {
+        if (!videoPath || videoPath === "") {
+           videoElem.innerHTML = `<source src="${videoPath}" type="video/mp4">`;;
+            videoElem.load();
+            alert("🎥 ՎԻԴԵՈՅԻ ՀՂՈՒՄԸ ԴԱՏԱՐԿ Է։\nԽնդրում եմ վերևի VIDEO_URLS-ում տեղադրեք ճիշտ հղումները (mp4):");
+            return;
+        }
+        const sourceElem = videoElem.querySelector('source');
+        if (sourceElem) {
+            sourceElem.src = videoPath;
+        } else {
+            const newSource = document.createElement('source');
+            newSource.src = videoPath;
+            newSource.type = "video/mp4";
+            videoElem.innerHTML = '';
+            videoElem.appendChild(newSource);
+        }
+        videoElem.load();
+        videoElem.play().catch(e => console.log("Ավտոմատ միացումը արգելափակված է, սեղմեք play:", e));
+    }
+    
+    function resetVideo() {
+        const sourceElem = videoElem.querySelector('source');
+        if (sourceElem) {
+            sourceElem.src = "";
+        } else {
+            const blankSource = document.createElement('source');
+            blankSource.src = "";
+            blankSource.type = "video/mp4";
+            videoElem.innerHTML = '';
+            videoElem.appendChild(blankSource);
+        }
+        videoElem.load();
+    }
+    
+    function handleAnswer(answerKey) {
+        let videoUrl = "";
+        if (answerKey === "yes") {
+            videoUrl = VIDEO_URLS.yes;
+        } else if (answerKey === "no") {
+            videoUrl = VIDEO_URLS.no;
+        } else if (answerKey === "crazy") {
+            videoUrl = VIDEO_URLS.crazy;
+        }
+        
+        if (videoUrl && videoUrl !== "") {
+            loadAndPlayVideo(videoUrl);
+        } else {
+            alert("🎥 ՎԻԴԵՈՆ ԴԵՌ ՉԻ ԱՎԵԼԱՑՎԵԼ։\nՏեղադրեք հղումը VIDEO_URLS-ում");
+        }
+    }
+
+    answerBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const answerVal = btn.getAttribute('data-answer');
+            handleAnswer(answerVal);
+        });
+    });
+    
+    resetBtn.addEventListener('click', () => {
+        resetVideo();
+        const tempMsg = document.createElement('div');
+        tempMsg.innerText = "✨ Նորից ընտրիր պատասխանը ✨";
+      tempMsg.style.position = 'fixed';
+        tempMsg.style.bottom = '20px';
+        tempMsg.style.left = '50%';
+        tempMsg.style.transform = 'translateX(-50%)';
+        tempMsg.style.background = '#2c2c2cdd';
+        tempMsg.style.color = 'white';
+        tempMsg.style.padding = '8px 18px';
+        tempMsg.style.borderRadius = '40px';
+        tempMsg.style.fontSize = '0.9rem';
+        tempMsg.style.zIndex = '999';
+        tempMsg.style.backdropFilter = 'blur(6px)';
+        document.body.appendChild(tempMsg);
+        setTimeout(() => { tempMsg.remove(); }, 1500);
+    });
+    
+    resetVideo();
+</script>
+</body>
+</html>
